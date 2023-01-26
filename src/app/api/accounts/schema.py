@@ -1,10 +1,11 @@
 from pydantic import BaseModel
-from app.entities import User
+from app.entities import User, Role
 
 
 class RegistrationRequest(BaseModel):
     username: str
     password: str
+    role: Role
 
 
 class RegistrationResponse(BaseModel):
@@ -18,3 +19,4 @@ class LoginRequest(BaseModel):
 
 class LoginResponse(BaseModel):
     user: User
+    token: str

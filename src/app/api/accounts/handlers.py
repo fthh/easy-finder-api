@@ -2,6 +2,9 @@ import uuid
 from fastapi import APIRouter, Request, Depends
 
 from app.services.accounts import AccountsService
+from app.api.deps import get_current_user
+from app.entities import User, Role
+
 
 from .schema import (
     LoginRequest, LoginResponse,
@@ -25,6 +28,7 @@ async def registration(
     user = await accounts_s.registration(
         request_data.username,
         request_data.password,
+        request_data.role,
     )
     return RegistrationResponse(
         user=user,
@@ -38,10 +42,21 @@ async def registration(
 )
 async def login(r: Request, request_data: LoginRequest):
     accounts_s: AccountsService = r.app.state.accounts_s
-    user = await accounts_s.login(request_data.username, request_data.password)
+    user, token = await accounts_s.login(request_data.username, request_data.password)
     return LoginResponse(
+        token=token,
         user=user,
     )
+
+
+@router.get(
+    '/api/accounts/me',
+    tags=['accounts'],
+    response_model=User,
+)
+async def me(actor: User = Depends(get_current_user)):
+    return actor
+
 
 
 @router.get('/api/accounts/logout', tags=['accounts'])
