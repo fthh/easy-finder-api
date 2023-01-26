@@ -9,7 +9,7 @@ RUN apk add --no-cache curl
 ENV POETRY_HOME="/etc/poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
 RUN sh -c "curl -sSL https://install.python-poetry.org > get-poetry.py"
-RUN python get-poetry.py --version 1.1.8
+RUN python get-poetry.py --version 1.1.12
 RUN ln -s /root/.poetry/bin/poetry /usr/bin/poetry && \
     poetry config virtualenvs.create false
 
